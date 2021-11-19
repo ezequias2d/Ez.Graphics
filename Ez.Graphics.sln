@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ez.Graphics", "src\Ez.Graphics\Ez.Graphics.csproj", "{7A26EC2C-BA48-4E4D-83A5-97564C17E085}"
 EndProject
@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VulkanExample", "src\VulkanExample\VulkanExample.csproj", "{0D366404-CF16-4B11-AF9D-E76F3FFB35E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ez.Graphics.StbImageSharp", "src\Ez.Graphics.StbImageSharp\Ez.Graphics.StbImageSharp.csproj", "{6B0CAD78-977C-4E77-A911-90C8990EA567}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,14 @@ Global
 		{0D366404-CF16-4B11-AF9D-E76F3FFB35E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0D366404-CF16-4B11-AF9D-E76F3FFB35E1}.Release|x86.ActiveCfg = Release|Any CPU
 		{0D366404-CF16-4B11-AF9D-E76F3FFB35E1}.Release|x86.Build.0 = Release|Any CPU
+		{6B0CAD78-977C-4E77-A911-90C8990EA567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B0CAD78-977C-4E77-A911-90C8990EA567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B0CAD78-977C-4E77-A911-90C8990EA567}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6B0CAD78-977C-4E77-A911-90C8990EA567}.Debug|x86.Build.0 = Debug|Any CPU
+		{6B0CAD78-977C-4E77-A911-90C8990EA567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B0CAD78-977C-4E77-A911-90C8990EA567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B0CAD78-977C-4E77-A911-90C8990EA567}.Release|x86.ActiveCfg = Release|Any CPU
+		{6B0CAD78-977C-4E77-A911-90C8990EA567}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

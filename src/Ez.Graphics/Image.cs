@@ -8,19 +8,19 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Ez.Graphics.Data
+namespace Ez.Graphics
 {
     /// <summary>
     /// Represents a texture.
     /// </summary>
-    public sealed class TextureData : IEquatable<TextureData>
+    public sealed class Image : IEquatable<Image>
     {
         private readonly byte[] _data;
         private readonly int _length;
         private readonly int _hashcode;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="TextureData"/> class.
+        /// Initializes a new instance of <see cref="Image"/> class.
         /// </summary>
         /// <param name="pixelFormat">The pixel format of texture.</param>
         /// <param name="width">The width of texture.</param>
@@ -30,7 +30,7 @@ namespace Ez.Graphics.Data
         /// <param name="layers">The number of layers of texture.</param>
         /// <param name="textureType">The texture type of texture.</param>
         /// <param name="data">The pixels data.</param>
-        public TextureData(
+        public Image(
             PixelFormat pixelFormat, 
             uint width, 
             uint height, 
@@ -52,7 +52,7 @@ namespace Ez.Graphics.Data
             _data = new byte[data.Length];
             MemUtil.Copy(_data, data);
 
-            _hashcode = HashHelper<TextureData>.Combine(PixelFormat, Width, Height, Depth, MipmapLevels, ArrayLayers, TextureType, HashHelper<TextureData>.Combine(Data));
+            _hashcode = HashHelper<Image>.Combine(PixelFormat, Width, Height, Depth, MipmapLevels, ArrayLayers, TextureType, HashHelper<Image>.Combine(Data));
         }
 
         /// <summary>
@@ -94,11 +94,11 @@ namespace Ez.Graphics.Data
         public ReadOnlySpan<byte> Data { get => new(_data, 0, _length); }
 
         /// <summary>
-        /// Returns a value that indicates whether this instance and another <see cref="TextureData"/> are equal.
+        /// Returns a value that indicates whether this instance and another <see cref="Image"/> are equal.
         /// </summary>
-        /// <param name="other">The other <see cref="TextureData"/>.</param>
-        /// <returns><see langword="true"/> if the two <see cref="TextureData"/> are equals; otherwise, <see langword="false"/>.</returns>
-        public bool Equals(TextureData other) =>
+        /// <param name="other">The other <see cref="Image"/>.</param>
+        /// <returns><see langword="true"/> if the two <see cref="Image"/> are equals; otherwise, <see langword="false"/>.</returns>
+        public bool Equals(Image other) =>
             ReferenceEquals(this, other) ||
             (PixelFormat == other.PixelFormat &&
                 Width == other.Width &&
@@ -111,7 +111,7 @@ namespace Ez.Graphics.Data
         /// <param name="obj">The object to compare with the current instance.</param>
         /// <returns><see langword="true"/> if the current instance and <paramref name="obj"/> are equal; otherwise, <see langword="false"/>.</returns>
         public override bool Equals(object obj) =>
-            obj is TextureData texture && Equals(texture);
+            obj is Image texture && Equals(texture);
 
         /// <summary>
         /// Returns the hash code for this instance.
@@ -120,34 +120,42 @@ namespace Ez.Graphics.Data
         public override int GetHashCode() => _hashcode;
 
         #region static
-        private const uint Signature = 0x455A5444;
+        private static readonly ReadOnlyMemory<byte> Signature = new byte[]{ 0x45, 0x5A, 0x5F, 0x49, 0x4D, 0x41, 0x47, 0x45 };
 
         /// <summary>
-        /// Save a texture data in a stream.
+        /// Save <paramref name="image"/> in the <paramref name="stream"/> with Ez Image Format.
         /// </summary>
-        /// <param name="texture">Texture data to save.</param>
-        /// <param name="stream">Stream to write.</param>
-        public static void Save(TextureData texture, Stream stream)
+        /// <param name="image">The image to save.</param>
+        /// <param name="stream">The destination.</param>
+        public static void Save(Image image, Stream stream)
         {
             using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
-            writer.Write(Signature);
-            writer.Write(texture.Width);
-            writer.Write(texture.Height);
-            writer.Write(texture.Depth);
-            writer.Write(texture.MipmapLevels);
-            writer.Write(texture.ArrayLayers);
-            writer.Write((byte)texture.TextureType);
-            writer.Write((uint)texture.PixelFormat);
-            writer.Write(texture.Data.Length);
-            writer.Write(texture.Data);          
+            writer.Write(Signature.Span);
+            writer.Write(image.Width);
+            writer.Write(image.Height);
+            writer.Write(image.Depth);
+            writer.Write(image.MipmapLevels);
+            writer.Write(image.ArrayLayers);
+            writer.Write((byte)image.TextureType);
+            writer.Write((uint)image.PixelFormat);
+            writer.Write(image.Data.Length);
+            writer.Write(image.Data);          
         }
 
-        public static TextureData Load(Stream stream)
+        /// <summary>
+        /// Load a <see cref="Image"/> from a stream with Ez Image format data.
+        /// </summary>
+        /// <param name="stream">The source stream with a Ez Image format data.</param>
+        /// <returns>The image loaded from <paramref name="stream"/>.</returns>
+        /// <exception cref="Exception">The <paramref name="stream"/> does not have a valid Ez Image format.</exception>
+        public static Image Load(Stream stream)
         {
             using var reader = new BinaryReader(stream, Encoding.UTF8, true);
 
-            if (Signature != reader.ReadUInt32())
-                throw new Exception("Stream data is corrupt.");
+            Span<byte> buffer = stackalloc byte[Signature.Length];
+            var signatureLength = reader.Read(buffer);
+            if (!(signatureLength == buffer.Length && MemUtil.Equals(buffer, Signature.Span)))
+                throw new OutOfMemoryException("The stream does not have a valid Ez Image format.");
 
             var width = reader.ReadUInt32();
             var height = reader.ReadUInt32();
