@@ -87,168 +87,18 @@ namespace Ez.Graphics
         public override string ToString() =>  string.Format("R:{0}, G:{1}, B:{2}, A:{3}", R, G, B, A);
 
         /// <inheritdoc/>
-        public Color GetColor() => Color.FromArgb((byte)(A * 255), (byte)(R * 255), (byte)(G * 255), (byte)(B * 255));
+        public Color GetColor() => Color.FromArgb(ToByte(A), ToByte(R), ToByte(G), ToByte(B));
 
         /// <inheritdoc/>
         public ColorSingle GetColorSingle() => this;
 
         /// <inheritdoc/>
-        public ColorByte GetColorByte() => new ColorByte((byte)(R * 255), (byte)(G * 255), (byte)(B * 255), (byte)(A * 255));
+        public ColorByte GetColorByte() => new(ToByte(R), ToByte(G), ToByte(B), ToByte(A));
 
         /// <inheritdoc/>
         public ColorInt GetColorInt() => new(ToInt(R), ToInt(G), ToInt(B), ToInt(A));
 
         /// <inheritdoc/>
-        public ColorUInt GetColorUInt() => new(ToUInt(R), ToUInt(G), ToUInt(B), ToUInt(A));
-        
-        private static uint ToUInt(in float value) => (uint)(Math.Clamp(value, 0, 1) * uint.MaxValue);
-        private static int ToInt(in float value) => (int)(Math.Clamp(value, -1, 1) * (double)uint.MaxValue + int.MinValue);
-
-        /// <summary>
-        /// Element-wise equality.
-        /// </summary>
-        /// <param name="left">The first value.</param>
-        /// <param name="right">The second value.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator ==(ColorSingle left, ColorSingle right) =>
-            left.Equals(right);
-
-        /// <summary>
-        /// Element-wise inequality.
-        /// </summary>
-        /// <param name="left">The first value.</param>
-        /// <param name="right">The second value.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool operator !=(ColorSingle left, ColorSingle right) => 
-            !left.Equals(right);
-
-        /// <summary>
-        /// Negates the specified color.
-        /// </summary>
-        /// <param name="color">The color to negate.</param>
-        /// <returns>The negated vector.</returns>
-        public static ColorSingle operator -(ColorSingle color) =>
-            new ColorSingle(-color._literal);
-
-        /// <summary>
-        /// Adds two colors together.
-        /// </summary>
-        /// <param name="left">The first color.</param>
-        /// <param name="right">The second color.</param>
-        /// <returns>The summed color.</returns>
-        public static ColorSingle operator +(ColorSingle left, ColorSingle right) =>
-            new ColorSingle(left._literal + right._literal);
-
-        /// <summary>
-        /// Subtracts the second color from the first.
-        /// </summary>
-        /// <param name="left">The first color.</param>
-        /// <param name="right">The second color.</param>
-        /// <returns>The color that results from subracting <paramref name="right"/> from <paramref name="left"/>.</returns>
-        public static ColorSingle operator -(ColorSingle left, ColorSingle right) =>
-            new ColorSingle(left._literal - right._literal);
-
-        /// <summary>
-        /// Multiplies two colors together.
-        /// </summary>
-        /// <param name="left">The first color.</param>
-        /// <param name="right">The second color.</param>
-        /// <returns>The product color.</returns>
-        public static ColorSingle operator *(ColorSingle left, ColorSingle right) =>
-            new ColorSingle(left._literal * right._literal);
-
-        /// <summary>
-        /// Divides the first color by the second.
-        /// </summary>
-        /// <param name="left">The first color.</param>
-        /// <param name="right">The second color.</param>
-        /// <returns>The color that results from dividing <paramref name="left"/> by <paramref name="right"/>.</returns>
-        public static ColorSingle operator /(ColorSingle left, ColorSingle right) =>
-            new ColorSingle(left._literal / right._literal);
-
-        /// <summary>
-        /// Multiples the specified color by the specified scalar value.
-        /// </summary>
-        /// <param name="left">The color.</param>
-        /// <param name="right">The scalar value.</param>
-        /// <returns>The scaled color.</returns>
-        public static ColorSingle operator *(ColorSingle left, float right) =>
-            new ColorSingle(left._literal * right);
-
-        /// <summary>
-        /// Divides the specified color by a specified scalar value.
-        /// </summary>
-        /// <param name="left">The color.</param>
-        /// <param name="right">The scalar value.</param>
-        /// <returns>The result of the division.</returns>
-        public static ColorSingle operator /(ColorSingle left, float right) =>
-            new ColorSingle(left._literal / right);
-
-        /// <summary>
-        /// Multiples the specified color by the specified scalar value.
-        /// </summary>
-        /// <param name="left">The scalar value.</param>
-        /// <param name="right">The color.</param>
-        /// <returns>The scaled color.</returns>
-        public static ColorSingle operator *(float left, ColorSingle right) =>
-            new ColorSingle(right._literal * left);
-
-
-        /// <summary>
-        /// Red (1, 0, 0, 1)
-        /// </summary>
-        public static readonly ColorSingle Red = new ColorSingle(1f, 0f, 0f, 1f);
-        /// <summary>
-        /// Dark Red (139f / 255f, 0f, 0f, 1f)
-        /// </summary>
-        public static readonly ColorSingle DarkRed = new ColorSingle(139f / 255f, 0f, 0f, 1f);
-        /// <summary>
-        /// Green (0f, 1f, 0f, 1f)
-        /// </summary>
-        public static readonly ColorSingle Green = new ColorSingle(0f, 1f, 0f, 1f);
-        /// <summary>
-        /// Blue (0f, 0f, 1f, 1f)
-        /// </summary>
-        public static readonly ColorSingle Blue = new ColorSingle(0f, 0f, 1f, 1f);
-        /// <summary>
-        /// Yellow (1f, 1f, 0f, 1f)
-        /// </summary>
-        public static readonly ColorSingle Yellow = new ColorSingle(1f, 1f, 0f, 1f);
-        /// <summary>
-        /// Grey (128f / 255f, 128f / 255f, 128 / 255f, 1f)
-        /// </summary>
-        public static readonly ColorSingle Grey = new ColorSingle(128f / 255f, 128f / 255f, 128f / 255f, 1f);
-        /// <summary>
-        /// Light Grey (211f / 255f, 211f / 255f, 211f / 255f, 1f)
-        /// </summary>
-        public static readonly ColorSingle LightGrey = new ColorSingle(211f / 255f, 211f / 255f, 211f / 255f, 1f);
-        /// <summary>
-        /// Cyan (0f, 1f, 1f, 1f)
-        /// </summary>
-        public static readonly ColorSingle Cyan = new ColorSingle(0f, 1f, 1f, 1f);
-        /// <summary>
-        /// White (1f, 1f, 1f, 1f)
-        /// </summary>
-        public static readonly ColorSingle White = new ColorSingle(1f, 1f, 1f, 1f);
-        /// <summary>
-        /// Cornflower Blue (100f / 255f, 149f / 255f, 237f / 255f, 1f)
-        /// </summary>
-        public static readonly ColorSingle CornflowerBlue = new ColorSingle(100f / 255f, 149f / 255f, 237f / 255f, 1f);
-        /// <summary>
-        /// Clear (0f, 0f, 0f, 0f)
-        /// </summary>
-        public static readonly ColorSingle Clear = new ColorSingle(0f, 0f, 0f, 0f);
-        /// <summary>
-        /// Black (0f, 0f, 0f, 1f)
-        /// </summary>
-        public static readonly ColorSingle Black = new ColorSingle(0f, 0f, 0f, 1f);
-        /// <summary>
-        /// Pink (1f, 192f / 255f, 203f / 255f, 1f)
-        /// </summary>
-        public static readonly ColorSingle Pink = new ColorSingle(1f, 192f / 255f, 203f / 255f, 1f);
-        /// <summary>
-        /// Orange (1f, 165f / 255f, 0f, 1f)
-        /// </summary>
-        public static readonly ColorSingle Orange = new ColorSingle(1f, 165f / 255f, 0f, 1f);
+        public ColorUInt GetColorUInt() => new (ToUInt(R), ToUInt(G), ToUInt(B), ToUInt(A));
     }
 }
