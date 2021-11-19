@@ -94,7 +94,7 @@ namespace Ez.Graphics.API.Vulkan.Core
             var count = 0u;
             Device.KhrSwapchain.GetSwapchainImages(Device.Handle, VkSwapchain, ref count, null);
 
-            Image* images = stackalloc Image[(int)count];
+            Silk.NET.Vulkan.Image* images = stackalloc Silk.NET.Vulkan.Image[(int)count];
             Device.KhrSwapchain.GetSwapchainImages(Device.Handle, VkSwapchain, &count, images);
 
             var textures = new Texture[count];

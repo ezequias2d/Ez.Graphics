@@ -9,6 +9,7 @@ using Ez.Numerics;
 using Silk.NET.Vulkan;
 using System;
 
+using VkImage = Silk.NET.Vulkan.Image;
 namespace Ez.Graphics.API.Vulkan.Core.Textures
 {
     internal class Texture : BaseTexture, ITexture
@@ -48,7 +49,7 @@ namespace Ez.Graphics.API.Vulkan.Core.Textures
             TransiantImageLayout(GetInitialLayout(), DefaultImageLayout);
         }
 
-        public Texture(Device device, Image image, Format format, Extent2D extent, bool depth, ImageLayout layout) : base(device, MemoryUsage.GpuOnly)
+        public Texture(Device device, Silk.NET.Vulkan.Image image, Format format, Extent2D extent, bool depth, ImageLayout layout) : base(device, MemoryUsage.GpuOnly)
         {
             VkFormat = format;
             Format = ToPixelFormat(format);
@@ -64,7 +65,7 @@ namespace Ez.Graphics.API.Vulkan.Core.Textures
             DefaultImageLayout = layout;
         }
 
-        public Image Image { get; }
+        public Silk.NET.Vulkan.Image Image { get; }
         public IAllocation Allocation { get; }
         public Format VkFormat { get; }
         public ImageAspectFlags ImageAspect { get; }
@@ -95,7 +96,7 @@ namespace Ez.Graphics.API.Vulkan.Core.Textures
                 _ => throw new VkException()
             };
 
-        private unsafe Image CreateImage()
+        private unsafe Silk.NET.Vulkan.Image CreateImage()
         {
             var families = Device.Families;
             var familyCount = families.Count;
@@ -236,7 +237,7 @@ namespace Ez.Graphics.API.Vulkan.Core.Textures
             fence.Wait(ulong.MaxValue);
         }
 
-        public static implicit operator Image(Texture texture)
+        public static implicit operator VkImage(Texture texture)
         {
             texture.CheckDispose();
             return texture.Image;
